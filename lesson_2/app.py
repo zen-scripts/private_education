@@ -1,46 +1,53 @@
 import asyncio
-import random
-import time
 
-from loguru import logger
+from web3 import Web3
 
+from sdk.data.models import Networks
+from sdk.client import Client
 
-async def foo(param):
-    await asyncio.sleep(random.randint(1, 3))
-    logger.success(f'start foo with param {param}')
-    await asyncio.sleep(random.randint(1, 3))
-    logger.success(f'end foo with param {param}')
-
-
-async def foo2(param):
-    await asyncio.sleep(random.randint(1, 3))
-    logger.success(f'start foo2 with param {param}')
-    await asyncio.sleep(random.randint(1, 3))
-    logger.success(f'end foo2 with param {param}')
-    return f'param: {param}; res: {random.randint(1, 10)}'
+from private_data import private_key1, private_key2, private_key3, proxy
 
 
 async def main():
-    t1 = time.time()
-    await asyncio.wait([
-        asyncio.create_task(foo(1)),
-        asyncio.create_task(foo(2)),
-        asyncio.create_task(foo(3)),
-    ])
-    t2 = time.time()
-    logger.success(t2 - t1)
+    client = Client(private_key=private_key1, network=Networks.Optimism, proxy=proxy)
+    # print(await client.wallet.balance(token_address='0xaf88d065e77c8cc2239327c5edb3a432268e5831'))
+    balance = await client.wallet.balance()
+    balance = await client.wallet.balance()
+    balance = await client.wallet.balance()
 
 
-async def main2():
-    t1 = time.time()
-    await asyncio.gather(
-        asyncio.create_task(foo(1)),
-        asyncio.create_task(foo(2)),
-        asyncio.create_task(foo(3)),
-    )
-    t2 = time.time()
-    logger.success(t2 - t1)
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    '''
+    token_address = Web3.to_checksum_address('0xFF970A61A04b1cA14834A43f5dE4533eBDDB5CC8')
+
+    tasks = []
+    for private_key in [private_key1, private_key2, private_key3]:
+        client = Client(private_key=private_key, network=Networks.Arbitrum)
+        tasks.append(asyncio.create_task(client.wallet.balance(token_address=token_address)))
+
+    await asyncio.gather(*tasks)
+    await asyncio.wait([*tasks])
+
+    for task in tasks:
+        print(task.result())
+    '''
     '''
     asyncio.gather() принимает список асинхронных задач (coroutines) в качестве аргументов и запускает их одновременно.
     Она возвращает список результатов, соответствующих выполненным задачам в том же порядке, в котором задачи были переданы в функцию.
@@ -52,19 +59,6 @@ async def main2():
     '''
 
 
-async def main3():
-    t1 = time.time()
-    tasks = []
-    for i in range(1, 6):
-        tasks.append(asyncio.create_task(foo2(i)))
-    await asyncio.gather(*tasks)
-    t2 = time.time()
-    logger.success(t2 - t1)
-
-    for task in tasks:
-        logger.success(task.result())
-
-
 if __name__ == '__main__':
     loop = asyncio.new_event_loop()
-    loop.run_until_complete(main3())
+    loop.run_until_complete(main())
