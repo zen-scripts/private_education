@@ -236,17 +236,49 @@ class Networks:
         )
     )
 
-    # todo: сделать самостоятельно
-    Fantom = ...
+    # DONE
+    Fantom = Network(
+        name='fantom',
+        rpc='https://fantom.publicnode.com',
+        chain_id=250,
+        tx_type=0,
+        coin_symbol='FTM',
+        explorer='https://ftmscan.com/',
+        api=API(key=config.FANTOM_API_KEY, url='https://api.ftmscan.com', docs='https://docs.ftmscan.com/'),
+    )
 
-    # todo: сделать самостоятельно
-    Celo = ...
+    # DONE
+    Celo = Network(
+        name='celo',
+        rpc='https://1rpc.io/celo',
+        chain_id=42220,
+        tx_type=0,
+        coin_symbol='CELO',
+        explorer='https://celoscan.io/',
+        api=API(key=config.CELO_API_KEY, url='https://api.celoscan.io/', docs='https://docs.celoscan.io/'),
+    )
 
-    # todo: сделать самостоятельно
-    Gnosis = ...
+    # DONE
+    Gnosis = Network(
+        name='gnosis',
+        rpc='https://rpc.ankr.com/gnosis',
+        chain_id=100,
+        tx_type=2,
+        coin_symbol='xDAI',
+        explorer='https://gnosisscan.io/',
+        api=API(key=config.GNOSIS_API_KEY, url='https://api.gnosisscan.io/', docs='https://docs.gnosisscan.io/'),
+    )
 
-    # todo: сделать самостоятельно
-    HECO = ...
+    # DONE
+    HECO = Network(
+        name='heco',
+        rpc='https://http-mainnet.hecochain.com',
+        chain_id=128,
+        tx_type=2,
+        coin_symbol='HECO',
+        explorer='https://www.hecoinfo.com/en-us/',
+        api=API(key=config.HECO_API_KEY, url='https://api.hecoinfo.com', docs='https://www.hecoinfo.com/en-us/apis'),
+    )
 
     # Testnets
     Goerli = Network(
@@ -262,8 +294,18 @@ class Networks:
         )
     )
 
-    # todo: сделать самостоятельно
-    Sepolia = ...
+    # DONE
+    Sepolia = Network(
+        name='sepolia',
+        rpc='https://rpc.sepolia.org',
+        chain_id=11155111,
+        tx_type=2,
+        coin_symbol='ETH',
+        explorer='https://sepolia.etherscan.io',
+        api=API(key=config.SEPOLIA_API_KEY, url='https://api-sepolia.etherscan.io/api',
+                docs='https://docs.etherscan.io/v/sepolia-etherscan/'
+        )
+    )
 
 
 class Unit:
@@ -472,3 +514,6 @@ class GEther(Unit):
 # todo: сделать самостоятельно
 class TEther(Unit):
     pass
+
+a = Unit(amount=1999, unit='ether')
+a.Wei
