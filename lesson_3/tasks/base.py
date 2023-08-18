@@ -4,15 +4,23 @@ from typing import Optional
 import aiohttp
 from py_eth_async.client import Client
 from py_eth_async.data.models import TokenAmount
-
+from data.models import Contracts
 from data.config import logger
 
 
 class Base:
-    def __init__(self, client: Client):
+    def __init__(self, client: Client, contract):
         self.client = client
+        self.contract = contract
+
+    @classmethod
+    async def init_async(cls, client: Client, network_name: str = 'ARBITRUM_WOOFI'):
+        contract = await client.contracts.get(contract_address=getattr(Contracts, network_name))
+        return cls(client, contract)
 
     async def get_decimals(self, contract_address: str) -> int:
+        if contract_address == '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE':
+            return 18
         contract = await self.client.contracts.default_token(contract_address=contract_address)
         return await contract.functions.decimals().call()
 
@@ -54,12 +62,12 @@ class Base:
                     async with session.get(f'https://api.binance.com/api/v3/depth?limit=1&symbol={token}USDT') as r:
                         if r.status != 200:
                             logger.error(f'code: {r.status} | json: {r.json()}')
-                            exit()
+                            raise ValueError('Не смогу получить цену токена')
                         result_dict = await r.json()
                         if 'asks' not in result_dict:
                             logger.error(
                                 f'code: {r.status} | json: {r.json()}')
-                            exit()
+                            raise ValueError('Ошибка получения цены: Нет ASK-ов в ответет сервера')
                         return float(result_dict['asks'][0][0])
             except Exception as e:
                 logger.error(
